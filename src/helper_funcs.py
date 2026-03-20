@@ -1,0 +1,159 @@
+import csv
+import datetime
+import os
+import statistics
+import time
+from collections import Counter
+from pathlib import Path
+
+import pandas as pd
+
+
+def get_file_paths(
+    input_folder,
+    csv_name,
+    Folder_structure,
+    site_list=["Edinburgh", "Cardiff", "Manchester", "Sussex", "KCL", "Glasgow"],
+):
+    all_paths = []
+    if Folder_structure == 1:
+        for site in site_list:
+            participant_list = [
+                f.name for f in os.scandir(input_folder + site) if f.is_dir()
+            ]
+            for participant in participant_list:
+                subfolders = [
+                    f.name
+                    for f in os.scandir(input_folder + site + "/" + participant)
+                    if f.is_dir()
+                ]
+                if csv_name in subfolders:
+                    all_paths.append(
+                        input_folder
+                        + site
+                        + "/"
+                        + participant
+                        + "/"
+                        + csv_name
+                        + "/"
+                        + csv_name
+                        + ".csv.gz"
+                    )
+
+    if Folder_structure == 2:
+        for site in site_list:
+            participant_list = [
+                f.name for f in os.scandir(input_folder + site) if f.is_dir()
+            ]
+            for participant in participant_list:
+                if csv_name + ".csv" in os.listdir(
+                    input_folder + site + "/" + participant
+                ):
+                    all_paths.append(
+                        input_folder
+                        + site
+                        + "/"
+                        + participant
+                        + "/"
+                        + csv_name
+                        + ".csv"
+                    )
+
+    print(len(all_paths), "files found")
+    return all_paths
+
+
+def summary_stats(LIST, thresh):
+    """
+    Calculates summary statistics for input 'LIST'
+    Returns:
+        summary_list (list): a list of summary data (e.g, max, median) from the input list
+    """
+    counts = Counter(LIST)
+    mode, mode_count = counts.most_common(1)[0]
+    less_than_mode = sum(1 for x in LIST if x < mode - thresh)
+    close_to_mode = sum(1 for x in LIST if (x > mode - thresh and x < mode + thresh))
+    av = sum(LIST) / len(LIST)
+    med = statistics.median(LIST)
+    min_list = min(LIST)
+    max_list = max(LIST)
+    summary_list = [
+        av,
+        med,
+        min_list,
+        max_list,
+        mode,
+        mode_count / (len(LIST)),
+        less_than_mode / (len(LIST)),
+        close_to_mode / (len(LIST)),
+    ]
+
+    return summary_list
+
+
+def all_summary_stats(cleaned_list: list):
+    """
+    This prints the average, median,max and min values of a list
+    """
+    cleaned_list.sort()
+    LQT_ind = int(len(cleaned_list) * 0.25)
+    UQT_ind = int(len(cleaned_list) * 0.75)
+    P1_ind = int(len(cleaned_list) * 0.01)
+    P99_ind = int(len(cleaned_list) * 0.99)
+    LQT = cleaned_list[LQT_ind]
+    UQT = cleaned_list[UQT_ind]
+    P1 = cleaned_list[P1_ind]
+    P99 = cleaned_list[P99_ind]
+    med = statistics.median(cleaned_list)
+    min_list = min(cleaned_list)
+    max_list = max(cleaned_list)
+
+    return [min_list, P1, LQT, med, UQT, P99, max_list]
+
+
+def get_participant_and_site(file_path: str):
+    path = Path(file_path)
+    if file_path[-3:] == "csv":
+        participant = path.parent.name
+        site = path.parents[1].name
+    if file_path[-3:] == ".gz":
+        participant = path.parents[1].name
+        site = path.parents[2].name
+
+    return participant, site
+
+
+def df_filter(df, filter_dict):
+
+    if filter_dict != None:
+        # This option will filter the df, keeping only rows where allowed values
+        # are in the specified columns
+        df = df[
+            pd.concat(
+                [df[col].isin(values) for col, values in filter_dict.items()], axis=1
+            ).all(axis=1)
+        ].copy()
+
+    return df
+
+
+def convert_to_unix_time(df: pd.DataFrame, cols: list):
+    """
+    Adds another field to the input datafram (df) called 'value.time'. This field will contain the
+    times in the column 'time_stamp_col' converted to unix time
+    Returns:
+        df (pd.DataFrame): Updated version of input 'df'; a dataframe for one data type for one participant.
+    """
+    # TODO : vectorize this.
+    for col in cols:
+        df["converted_time"] = df[col]
+        for i in range(0, len(df)):
+            date_string = df[col][i]
+            date_format = "%Y-%m-%dT%H:%M:%S.%f"
+            datetime_object = datetime.datetime.strptime(date_string, date_format)
+            unix_timestamp = time.mktime(datetime_object.timetuple())
+            df.loc[i, "converted_time"] = unix_timestamp
+            df[col] = df["converted_time"]
+            # TODO delete converted_time col
+
+    return df

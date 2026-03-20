@@ -1,0 +1,14 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: content/general_intro
+chapters:
+  - file: content/general_template
+  - file: content/heart_rate_specific_template
+  - file: content/sleep_specific_template
+  - file: content/steps_specific_template
+
+
+
+

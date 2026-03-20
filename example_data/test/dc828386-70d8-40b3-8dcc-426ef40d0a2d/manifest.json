@@ -1,0 +1,41 @@
+{
+  "last_run_id": "backfill-legacy-rds-reorg",
+  "metrics": {
+    "sensorkit_ambient_light": {
+      "bytes_merged": 326894,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_ambient_pressure": {
+      "bytes_merged": 875717,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_device_usage": {
+      "bytes_merged": 47532,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_pedometer": {
+      "bytes_merged": 2802445,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    }
+  },
+  "note": "Placeholder participant manifest generated during RDS reorganization backfill.",
+  "participant_id": "dc828386-70d8-40b3-8dcc-426ef40d0a2d",
+  "site": "test",
+  "updated_at": "2026-03-11T12:12:24Z"
+}

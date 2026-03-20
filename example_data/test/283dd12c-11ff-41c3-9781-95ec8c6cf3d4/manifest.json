@@ -1,0 +1,225 @@
+{
+  "last_run_id": "backfill-legacy-rds-reorg",
+  "metrics": {
+    "active_apple_healthkit_activity": {
+      "bytes_merged": 430,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_audio_exposure": {
+      "bytes_merged": 585,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_distance": {
+      "bytes_merged": 312,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_env_exposure": {
+      "bytes_merged": 1431,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_exercise_time": {
+      "bytes_merged": 314,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_heart_rate": {
+      "bytes_merged": 7398,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_heart_rate_variability": {
+      "bytes_merged": 2018,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_resp_rate": {
+      "bytes_merged": 865,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_resting_heart_rate": {
+      "bytes_merged": 365,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_sleep_stage": {
+      "bytes_merged": 717,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_stairs": {
+      "bytes_merged": 698,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "active_apple_healthkit_steps": {
+      "bytes_merged": 302,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "apple_ios_magnetic_field": {
+      "bytes_merged": 612949,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "connect_data_log": {
+      "bytes_merged": 3631,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "connect_settings_change": {
+      "bytes_merged": 260,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "ios_phone_relative_location": {
+      "bytes_merged": 330,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "notification_schedule_dates": {
+      "bytes_merged": 339,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_acceleration": {
+      "bytes_merged": 7377162,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_ambient_light": {
+      "bytes_merged": 1649,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_ambient_pressure": {
+      "bytes_merged": 2032,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_device_usage": {
+      "bytes_merged": 31266,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_keyboard_metrics": {
+      "bytes_merged": 765,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_message_usage": {
+      "bytes_merged": 364,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_on_wrist": {
+      "bytes_merged": 412,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_pedometer": {
+      "bytes_merged": 152021,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_rotation_rate": {
+      "bytes_merged": 6226798,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    },
+    "sensorkit_visits": {
+      "bytes_merged": 367,
+      "files_merged": 1,
+      "latest_object_key": null,
+      "latest_timestamp": null,
+      "refresh_mode": "backfill-placeholder",
+      "refresh_start_timestamp": null
+    }
+  },
+  "note": "Placeholder participant manifest generated during RDS reorganization backfill.",
+  "participant_id": "283dd12c-11ff-41c3-9781-95ec8c6cf3d4",
+  "site": "test",
+  "updated_at": "2026-03-12T13:28:41Z"
+}
