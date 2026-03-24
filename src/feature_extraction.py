@@ -6,6 +6,9 @@ from helper_funcs import convert_to_unix_time, df_filter
 
 
 def round_timestamp_to_midnight(df, timestamp_col):
+    """
+    Rounds all values in timestamp_col to the nearest midnight 
+    """
     df["value.time.day"] = pd.to_datetime(df[timestamp_col], unit="s", origin="unix")
     df["hour"] = df["value.time.day"].dt.hour + df["value.time.day"].dt.minute / 60
     df["hour"] = df["hour"].apply(lambda x: x - 24 if x > 12 else x)
@@ -41,7 +44,9 @@ def get_extra_HR_metadata_features(
     duration_col=None,
     included_errors=["RT+CM", "STG+CM", "STG-CM", "EAS"],
 ):
-
+    """
+    Produces extra metadata features for input dataframe cleaned_df
+    """
     # Calculate filtered steps and get count
     cleaned_df["filtered"] = cleaned_df[meas_col].clip(
         lower=low_thresh, upper=upper_thresh
@@ -97,48 +102,6 @@ def get_extra_HR_metadata_features(
     return metadata_features, cleaned_df
 
 
-# def get_fixed_series(df,
-#                      interval,
-#                      agg,
-#                      meas_col,
-#                      timestamp_col,
-#                      new_name,
-#                      extended_index=None,
-#                      ):
-#     """
-#     Takes in an input df and produces an output df that contains a resampled series of the
-#     field meas_col with the specified interval, resampling method defined by agg. The name
-#     of the field in the output df is set by new_name, and is extended by extended_index if
-#     it is set.
-#     Returns:
-#         output_series: a df containing a resampled series for a field of the input df.
-#     """
-
-#     df["value.time.day"] = pd.to_datetime(df[timestamp_col], unit="s", origin="unix")
-#     timestamp_col="value.time.day"
-#     index_to_drop = df[df[timestamp_col].dt.year == 1970].index # Remove rows where the year is 1970, which indicates no data was recorded
-#     df.drop(index_to_drop, inplace=True)
-#     df.set_index(timestamp_col, inplace=True)
-
-#     #Carry out the resampling
-#     df=df.loc[:, [meas_col]].copy()
-#     if agg=='count':
-#         output_series=df.resample(interval).count()
-#     if agg=='max':
-#         output_series=df.resample(interval).max()
-#     if agg=='sum':
-#         output_series=df.resample(interval).sum()
-
-#     #reindex the output series so it is the required length
-#     if extended_index is not None:
-#         output_series = output_series.reindex(extended_index).fillna(0)
-
-#     # rename the measurement column
-#     output_series.rename(columns={meas_col: new_name}, inplace=True)
-
-#     return output_series
-
-
 def get_fixed_series(
     df,
     interval,
@@ -188,60 +151,6 @@ def get_fixed_series(
     return output_series
 
 
-# def find_durations(df,unix,start_col, end_col, interval):
-#     """
-#     The incoming df should already be cleaned such that the values in end_col are always after
-#     the values in start_col
-#     returns a version of df with end and start cols converted to datetime objects and extra column
-#     'seconds_diff' which gives the duration of each datapoint. Any datapoints overlapping the hour
-#     have been split into separate datapoints
-#     """
-#     if unix:
-#         #Convert df to right format for resampling
-#         df[start_col] = pd.to_datetime(df[start_col], unit="s", origin="unix")
-#         df[end_col] = pd.to_datetime(df[end_col], unit="s", origin="unix")
-#     if interval== 'D':
-#         df['overlap'] = df[start_col].dt.day != df[end_col].dt.day
-#     if interval== 'H':
-#         df['overlap'] = df[start_col].dt.hour != df[end_col].dt.hour
-#     df_copy=df[df['overlap']==True]
-#     df_copy[start_col] = df_copy[start_col].dt.ceil(interval)
-#     df[end_col] = df_copy[end_col].dt.ceil(interval)
-#     df.loc[df['overlap'], end_col] = df.loc[df['overlap'], end_col].dt.floor(interval)
-#     df = pd.concat([df, df_copy], ignore_index=True)
-#     df['seconds_diff'] = (df[end_col] - df[start_col]).dt.total_seconds()
-
-#     return df
-
-
-def find_durations_orig(df, start_col, end_col, interval, meas_col=None):
-    """
-    The incoming df should already be cleaned such that the values in end_col are always after
-    the values in start_col
-    returns a version of df with end and start cols converted to datetime objects and extra column
-    'seconds_diff' which gives the duration of each datapoint. Any datapoints overlapping the hour
-    have been split into separate datapoints
-    meas col is a numerical measurement column that will be split proportionally between the two new datapoints
-    """
-    if meas_col is not None:
-        df["duration"] = df[end_col] - df[start_col]
-    # Convert df to right format for resampling
-    df[start_col] = pd.to_datetime(df[start_col], unit="s", origin="unix")
-    df[end_col] = pd.to_datetime(df[end_col], unit="s", origin="unix")
-    if interval == "D" or interval == "d":
-        df["overlap"] = df[start_col].dt.day != df[end_col].dt.day
-    if interval == "H" or interval == "h":
-        df["overlap"] = df[start_col].dt.hour != df[end_col].dt.hour
-    df_copy = df[df["overlap"] == True].copy()
-    df_copy[start_col] = df_copy[start_col].dt.ceil(interval)
-    df.loc[df["overlap"], end_col] = df.loc[df["overlap"], end_col].dt.floor(interval)
-    df = pd.concat([df, df_copy], ignore_index=True)
-    df["seconds_diff"] = (df[end_col] - df[start_col]).dt.total_seconds()
-    if meas_col is not None:
-        df[meas_col] = df[meas_col] * df["seconds_diff"] / df["duration"]
-
-    return df
-
 
 def find_durations(df, start_col, end_col, interval, meas_col=None):
     """
@@ -290,99 +199,6 @@ def split_intervals(df, freq, start_col, end_col):
 
     return df.reset_index(drop=True)
 
-
-def apple_sleep_duration(df, interval):
-    df["duration"] = (
-        df["value.endTime"] - df["value.time"]
-    )  # TODO remove this and below line once this step has been added to cleaning function
-    df = df[df["duration"] > 0]
-    df = find_durations(df, True, "value.time", "value.endTime", interval)
-    df = df[
-        df["value.stringValue"].isin(
-            ["sleep.rem", "sleep.deep", "sleep.light", "sleep"]
-        )
-    ]
-    total_sleep = get_fixed_series(
-        df, interval, "sum", "seconds_diff", "value.time", "total sleep"
-    )
-
-    return total_sleep
-
-
-def fitbit_sleep_duration(df, interval):
-    df = find_durations(df, True, "value.time", "value.endTime", interval)
-    df = df[df["value.sleep"].isin(["REM", "DEEP", "LIGHT"])]
-    total_sleep = get_fixed_series(
-        df, interval, "sum", "seconds_diff", "value.time", "total sleep"
-    )
-
-    return total_sleep
-
-
-def steps_total_android_phone(df, interval):
-    """
-    Returns a df containing an hourly or daily (set by interval) series of step count with
-    associated metadata columns
-    """
-
-    counts_raw = get_fixed_series(
-        df,
-        interval,
-        "count",
-        "value.steps",
-        "value.time",
-        "total raw datapoints",
-        unix=True,
-    )
-    extended_index = pd.date_range(
-        start=counts_raw.index.min(), end=counts_raw.index.max(), freq=interval
-    )
-    df = df[df["value.steps"] > 0]
-
-    # get hourly series and number over threshold
-    hourly_series = get_fixed_series(
-        df,
-        interval,
-        "sum",
-        "value.steps",
-        "value.time",
-        "total steps",
-        extended_index=extended_index,
-    )
-    if interval == "1h":
-        df["gap"] = df["value.time"].diff().fillna(3600)
-    if interval == "1d":
-        df["gap"] = df["value.time"].diff().fillna(86400)
-    df["sps"] = np.where(df["gap"] != 0, df["value.steps"] / df["gap"], 0)
-    counts_above_thresh_df = df[df["sps"] > 4]
-    counts_above_thresh = get_fixed_series(
-        counts_above_thresh_df,
-        interval,
-        "count",
-        "value.steps",
-        "value.time",
-        "filtered datapoints",
-        extended_index=extended_index,
-    )
-    df["value.steps"] = df["value.steps"].clip(upper=4 * df["gap"])
-    hourly_series_filtered = get_fixed_series(
-        df,
-        interval,
-        "sum",
-        "value.steps",
-        "value.time",
-        "total steps (filtered)",
-        extended_index=extended_index,
-    )
-
-    # merge everything together
-    output_df = pd.concat(
-        [counts_raw, hourly_series, hourly_series_filtered, counts_above_thresh], axis=1
-    )
-
-    return output_df
-
-
 def weighted_average(
     df,
     timestamp_col,
@@ -393,6 +209,9 @@ def weighted_average(
     end_time_col=None,
     duration_col=None,
 ):
+    """
+    Returns a df that reports the weighted average of meas_col for the input interval
+    """
     if duration_col != None:
         df["end_time"] = df[timestamp_col] + df[duration_col]
         df = find_durations(df, timestamp_col, "end_time_col", interval)
@@ -427,6 +246,7 @@ def weighted_average(
         final_df["total_weighted"] / final_df["total_duration"],
     )
     final_df = final_df[[col_name]]
+
     return final_df
 
 
@@ -440,16 +260,7 @@ def get_coverage(
     duration_col=None,
 ):
     """
-    Docstring for get_coverage
-
-    :param df: Description
-    :param timestamp_col: Description
-    :param meas_col: Description
-    :param max_time_gap: Description
-    :param interval: Description
-    :param col_name: Description
-    :param end_time_col: Description
-    :param duration_col: Description
+    Returns a dataframe that reports the amount of time covered each interval
     """
 
     if duration_col != None:

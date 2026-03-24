@@ -15,7 +15,9 @@ def investigate_sleep_blocks(
     convert_to_unix=None,
     filter_dict=None,
 ):
-    # TODO add option to use endtime col instead of duration, and have option to convert endtime col to unix
+    """
+    Returns a list of the length of each 'block' of sleep across all the files in files_list.
+    """
     # TODO refactor this.
     # TODO addd documentation
     all_block_durations = []
@@ -90,9 +92,11 @@ def investigate_sleep_blocks(
     return all_block_durations
 
 
-def find_time_of_timestamps(
-    all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None
-):
+def find_time_of_timestamps(all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None):
+    """
+    Returns a dictionary that reports how often each time of day occurs in the timestamp_col column 
+    over all the files in all_file_paths
+    """
     all_hours = []
     for path in all_file_paths:
         # read in file

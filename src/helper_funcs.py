@@ -13,8 +13,12 @@ def get_file_paths(
     input_folder,
     csv_name,
     Folder_structure,
-    site_list=["Edinburgh", "Cardiff", "Manchester", "Sussex", "KCL", "Glasgow"],
+    site_list,
 ):
+    """
+    Get a list of the paths to all the files with name csv_name in input_folder in the subfolders
+    found in site_list. 
+    """
     all_paths = []
     if Folder_structure == 1:
         for site in site_list:
@@ -65,9 +69,7 @@ def get_file_paths(
 
 def summary_stats(LIST, thresh):
     """
-    Calculates summary statistics for input 'LIST'
-    Returns:
-        summary_list (list): a list of summary data (e.g, max, median) from the input list
+    Returns summary statistics for the values in LIST
     """
     counts = Counter(LIST)
     mode, mode_count = counts.most_common(1)[0]
@@ -93,7 +95,7 @@ def summary_stats(LIST, thresh):
 
 def all_summary_stats(cleaned_list: list):
     """
-    This prints the average, median,max and min values of a list
+    Returns summary statistics for the values in cleaned_list
     """
     cleaned_list.sort()
     LQT_ind = int(len(cleaned_list) * 0.25)
@@ -112,6 +114,9 @@ def all_summary_stats(cleaned_list: list):
 
 
 def get_participant_and_site(file_path: str):
+    """
+    Get the participant and site from file_path
+    """
     path = Path(file_path)
     if file_path[-3:] == "csv":
         participant = path.parent.name
@@ -124,7 +129,9 @@ def get_participant_and_site(file_path: str):
 
 
 def df_filter(df, filter_dict):
-
+    """
+    Filters the rows in df based on values in filter_dict
+    """
     if filter_dict != None:
         # This option will filter the df, keeping only rows where allowed values
         # are in the specified columns
@@ -139,10 +146,7 @@ def df_filter(df, filter_dict):
 
 def convert_to_unix_time(df: pd.DataFrame, cols: list):
     """
-    Adds another field to the input datafram (df) called 'value.time'. This field will contain the
-    times in the column 'time_stamp_col' converted to unix time
-    Returns:
-        df (pd.DataFrame): Updated version of input 'df'; a dataframe for one data type for one participant.
+    Converts all columns in cols in the dataframe df to unix time.
     """
     # TODO : vectorize this.
     for col in cols:
