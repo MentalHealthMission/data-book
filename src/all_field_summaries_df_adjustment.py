@@ -17,6 +17,7 @@ def df_adjustment(df, df_adjustment_args):
                 ).any(axis=1)
                 df = df[df["same_device"] == True]
             df[_dict_["steps col"]] = df["new steps"]
+            df = df[df[_dict_["steps col"]] >= 0]
         if _dict_["steps per second"]:
             df["gap"] = df[_dict_["timestamp"]].diff().fillna(0)
             df["sps"] = df[_dict_["steps col"]] / df["gap"]
