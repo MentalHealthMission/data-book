@@ -1,0 +1,23 @@
+version: 1
+project:
+  title: Data Book
+  authors:
+    - name: NIHR Mental Health TRC Mission Team - Data and Digital
+  github: executablebooks/jupyter-book
+  bibliography:
+    - references.bib
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      output: exports/book.pdf
+  toc:
+    - file: content/general_intro.md
+    - file: content/general_template.ipynb
+    - file: content/heart_rate_specific_template.ipynb
+    - file: content/sleep_specific_template.ipynb
+    - file: content/steps_specific_template.ipynb
+site:
+  options:
+    # logo: logo.png
+    folders: true
+  template: book-theme
