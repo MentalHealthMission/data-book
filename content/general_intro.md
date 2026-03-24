@@ -4,19 +4,18 @@
 
 This book provides a pipeline for data analysis, data cleaning, and
 feature extraction that can be applied to a range of smartphone and wearable
-datasets. It is built from the [repository](https://github.com/MentalHealthMission/data-book), which contains all the code
+datasets. It is built from a [GitHub repository](https://github.com/MentalHealthMission/data-book), which contains all the code
 for this pipeline and is designed to be converted into a Jupyter Book once the
 pipeline is complete, with each Jupyter notebook becoming a `chapter` of the
 book that records the data analysis results, code used, and decisions made for
-one specific type of data. To see instructions for building a book, follow
-this link: https://jupyterbook.org/
+one specific type of data.
 
 The repository includes a {doc}`general template <general_template>` which gives a step-by-step
 method for processing the raw data, ranging from data analysis to feature
 extraction. The data analysis includes three main steps that are helpful for all
 data types, as well as additional steps that will be useful for certain types of
 data. The cleaning and feature extraction stage includes a function to create
-`minutely`, `hourly` or `daily` features from the raw data and to also save a
+`minutely`, `hourly` or `daily` features from the raw data and also to save a
 cleaned version of the raw data. For all data types, the features produced
 include `metadata features` that describe the quality/quantity of the data for
 that interval. These can be useful either as a direct input to a machine
@@ -32,9 +31,15 @@ suggest additional analyses that may be useful for each data type. We have tried
 to make these templates as general as possible within these data types, but
 further tailoring may be required for specific datasets.
 
-Each of the templates is given as a Jupyter notebook. These call functions that
-are defined in the python scripts (`.py` files in the `src` folder). The other files in the repository are all
-required files for the construction of a Jupyter Book.
+Each of the templates is given as a Jupyter notebook which is stored under the
+`content` folder. These notebooks call functions that are defined in the python
+scripts (`.py` files in the `src` folder). The other files in the repository are
+all required for constructing of a Jupyter
+Book.
+
+```{tip}
+If you want to publish the Jupyter Book locally, you can use the command `jupyter-book start` and open the book in your local browser. For more information, including on how to generate static *html* pages or *pdfs*, please check their website: https://jupyterbook.org/
+```
 
 The general template gives details on the data analysis, data cleaning, and
 feature extraction functions used, so should be read first. The data type
