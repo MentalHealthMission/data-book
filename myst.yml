@@ -3,8 +3,8 @@ project:
   title: Data Book
   index: content/general_intro.md
   authors:
-    - name: NIHR Mental Health TRC Mission Team - Data and Digital
-  github: executablebooks/jupyter-book
+    - name: NIHR Mental Health TRC - Data and Digital
+  github: https://github.com/MentalHealthMission/data-book
   bibliography:
     # - references.bib
   exports:
@@ -19,6 +19,6 @@ project:
     - file: content/steps_specific_template.ipynb
 site:
   options:
-    # logo: logo.png
+    logo: images/MH-TRC-logo.png
     folders: true
   template: book-theme
