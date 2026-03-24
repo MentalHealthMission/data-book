@@ -1,11 +1,12 @@
 version: 1
 project:
   title: Data Book
+  index: content/general_intro.md
   authors:
     - name: NIHR Mental Health TRC Mission Team - Data and Digital
   github: executablebooks/jupyter-book
   bibliography:
-    - references.bib
+    # - references.bib
   exports:
     - format: pdf
       template: plain_latex_book
