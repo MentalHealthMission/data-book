@@ -26,20 +26,14 @@ def check_all_data_types(
     participant_ID_col: str | None,
 ):
     """
-    Iterates through each datatype in 'csv_list' and calculates the fraction of timestamps
-    that have each type of timestamp error across all participants in a list of subfolders ('site_list')
-    in 'input_folder'. Uses the information in 'info_dict' to detect errors. Also outputs two additional
-    csvs to 'output_folder for each data type.
-    Appends a list that will be a row of the output csv to 'all_rows' for each data type.
-    Returns:
-        all_rows (list): A list of all the rows to be included in the output csv
+    Calculates summary statistics for time stamp errors across all files in files_list.
+    Also outputs two additional csvs to 'output_folder' that give more in depth information 
     """
     # Create an empty list to record number of errors for each participant for this data type.
     participants = []
     # Create an empty df to record all examples of errors for this data type
     examples = pd.DataFrame()
 
-    # Loop over all files in RDS of data type 'csv_name'
     for path in files_list:
 
         try:
@@ -69,15 +63,11 @@ def check_all_data_types(
         if totals[0] > 0:
             participants.append([path] + totals + [x / totals[0] for x in totals[1:7]])
 
-        # Update all_rows with summary information across all participants for this data type
     all_errors, max_fractions = update_output_array(participants)
     # Save output files for this data type
     # TODO find a way to tidy outputs
     write_examples_to_csv(examples, output_folder)
-    write_participants_to_csv(
-        participants,
-        output_folder,
-    )
+    write_participants_to_csv(participants,output_folder)
 
     return all_errors, max_fractions
 
@@ -95,10 +85,7 @@ def counting_errors(
     participant_ID_col: str | None,
 ):
     """
-    Counts the number of timestamp errors in the input data frame 'df' using information stored in the
-    dictionary 'info_dict'. df contains all records of the data type 'csv_name' for one participant.
-    The function returns a list of counts for each error type ('total_errors') and updates 'examples' with
-    example errors from this participant.
+    Counts the number of timestamp errors in the input data frame 'df' 
     Returns:
         total_errors (list): a list of the total number of timestamps and the total number of each type of error.
         examples (pd.DataFrame): An updated list of examples of pairs of records with a timestamp error.
@@ -216,15 +203,9 @@ def sort_df(
     time_stamp_col: str,
 ):
     """
-    Finds the name of the end time or duration column for data type 'csv_name' using 'field_names' and 'info_dict'.
-    Then sorts 'df' by timestamp then end time/duration if one exists. Assumes that only end time OR duration
-    will be present for a data type (or neither), as this is true for all the data types currently included in
-    merged-data. Then adds columns to df that report the time gap between consecutive rows and whether any values
-    relevant to measurements have changed between consecutive rows (using 'measurement_cols').
-    Returns:
-        end_time_col (str): the name of the column reporting time records end (or empty string if none exists)
-        duration_col (str): the name of the column reporting record duration (or empty string if none exists)
-        df (pd.DataFrame): Updated version of input 'df'; a dataframe for one data type for one participant.
+    Sorts the input df based on time_stamp_col and then either end_time_col or duration_col if 
+    either of them are not None. Also adds columns for calculating timestamp errors using 
+    time_stamp_col and measurement_cols
     """
     # Looks for a column for end time, retrieves end_time_col and sorts df on timestamp/end-time if one is found
     if end_time_col != None:
@@ -260,9 +241,7 @@ def count_EAS_errors(
     STG: float,
 ):
     """
-    Checks whether there is a column index for end time in 'info_dict'. If so, calculates EAS errors using end time
-    If there is no end time, checks if there is a column index for duration. If so, uses this to calculate EAS errors
-    If there is no end time or duration, reports 0 total instances for the EAS errors.
+    Calculates the number of EAS errors if end_time_col or duration_col is not None
     Returns:
         total_errors (list): A list of the total number of all error types, updated to include EAS errors
         examples (df.DataFrame): A df containing examples of error types, updated with EAS errorrs
@@ -333,10 +312,7 @@ def clean_df(
     participant_ID_col: str | None,
 ):
     """
-    Converts timestamp in 'df' to unix time if timestamp is currently in datetime format, then removes
-    irrelevant columns of df and fills empty cells.
-    Returns:
-        df (pd.DataFrame): Updated version of input 'df'; a dataframe for one data type for one participant.
+    Cleans df so that it only includes relevant columns
     """
     if site_col is not None and participant_ID_col is not None:
         df = df.loc[
@@ -351,18 +327,14 @@ def clean_df(
     # TODO: check below line is ok
     pd.set_option("future.no_silent_downcasting", True)
     df = df.replace([None, "", pd.NA], "empty")
+
     return df, time_stamp_col
 
 
 def update_output_array(participants: list[list]):
     """
-    Updates the output array ('all_rows') with summary information for this data type ('csv_name'). Uses
-    the data in 'participants' to get total numbers of errors across all participants and the maximum
-    error fractions across all participants. Adds an extra row to all_rows with this information plus
-    supporting information about the error defining thresholds used from 'info_dict'.
-    Returns:
-        all_rows (list): A list of all the rows to be included in the output csv, updated to include
-                         information on the current data-type (csvname)
+    Returns a summary of how often each type of timestamp error occurs across all participants
+    And a summary of the maximum amount of timestamp errors across all participants.
     """
     participants_np = (np.array(participants)[:, 1:14]).astype(float)
     all_errors_tots = np.sum(participants_np[:, 0:7], axis=0)
@@ -378,7 +350,7 @@ def update_output_array(participants: list[list]):
 
 def write_participants_to_csv(participants, output_folder):
     """
-    Writes the individual participant results for this data type ('csv_name') stored in
+    Writes the individual participant results stored in
     'participants' to a csv that will be saved in 'output folder'
     """
     column_names = [
@@ -415,7 +387,7 @@ def write_participants_to_csv(participants, output_folder):
 
 def write_examples_to_csv(examples, output_folder):
     """
-    Writes examples for this data type ('csv_name') stored in the dataframe
+    Writes timestamp error examples stored in the dataframe
     'examples' to a csv that will be saved in 'output folder'.
     """
     if not os.path.exists(output_folder + "/timestamps error examples"):
@@ -429,8 +401,8 @@ def write_examples_to_csv(examples, output_folder):
 
 def check_timestamp_errors(
     files_list: list[str],
-    EAS_threshold: str,
-    timegap_threshold: str,
+    EAS_threshold: float,
+    timegap_threshold: float,
     measurement_cols: list[str],
     timestamp_col="value.time",
     end_time_col=None,
@@ -443,14 +415,8 @@ def check_timestamp_errors(
     participant_ID_col=None,
 ):
     """
-    This function performs timestamp checks on all data types included in the
-    csv_list file. The results of the checks are then written to an output csv.
-    Args:
-        input_folder (str): Path where the data is stored.
-        site_list (list[str]): The sites to include in the calculation.
-        output_folder (str): Path to the folder where the output is stored.
-        info_folder: Path to the folder where the supporting csvs are stored.
-        Device: The device we want to analyse data for.
+    This function performs timestamp checks on all files in files_list and outputs the results
+    as a pandas dataframe
     """
     # Add any duration or end time cols to measurement cols (as we will also want to see if
     # these change when assessing RT and STG)

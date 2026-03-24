@@ -8,11 +8,6 @@ def get_group_ids(df, time_stamp_col, STG_fix, STG):
     Add a column to df that assigns a 'group' to each row - all rows with same
     timestamp, or timestamps within STG if STG_fix is True, will be assigned
     same group.
-
-    :param df: Description
-    :param time_stamp_col: Description
-    :param STG_fix: Description
-    :param STG: Description
     """
     gaps = df[time_stamp_col].diff().fillna(0)
     if STG_fix:
@@ -25,6 +20,9 @@ def get_group_ids(df, time_stamp_col, STG_fix, STG):
 
 
 def calculate_errors(df, time_stamp_col, measurement_col, STG):
+    """
+    Adds columns to df that indicate whether each row has a timestamp error
+    """
     df = df[[time_stamp_col, measurement_col]]
     df = df.drop_duplicates(keep="first")
     df = df.sort_values(by=time_stamp_col)
@@ -47,12 +45,6 @@ def calculate_errors_with_duration(
 ):
     """
     Adds columns to df that indicate whether each row has a timestamp error
-
-    :param df: Description
-    :param time_stamp_col: Description
-    :param measurement_col: Description
-    :param duration_col: Description
-    :param STG: Description
     """
     df = df[[time_stamp_col, measurement_col, duration_col]]
     df = df.drop_duplicates(keep="first")
@@ -83,12 +75,6 @@ def calculate_error_with_endtime(
 ):
     """
     Adds columns to df that indicate whether each row has a timestamp error
-
-    :param df: Description
-    :param time_stamp_col: Description
-    :param measurement_col: Description
-    :param end_time_col: Description
-    :param STG: Description
     """
     df = df[[time_stamp_col, measurement_col, end_time_col]]
     df = df.drop_duplicates(keep="first")

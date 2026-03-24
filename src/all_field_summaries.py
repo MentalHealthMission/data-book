@@ -7,14 +7,12 @@ from all_field_summaries_df_adjustment import df_adjustment
 from helper_funcs import df_filter
 
 
-def retrieve_all_data(
-    new_field_names, files_list, timestamp, filter_dict, df_adjustment_args
-):
+def retrieve_all_data(new_field_names, files_list, timestamp, filter_dict, df_adjustment_args):
     """
     Returns a 2d array that contains all entries in each column listed in 'new_field_names'
     across every file in files_list. Each file is first cleaned using the information in
-    filter_dict and df_adjustment_args. Duplicate entries ((same values with the same value in the
-    timestamp column)) are deleted.
+    filter_dict and df_adjustment_args. Duplicate entries (same values at the same time) are 
+    deleted.
     """
     all_values = []
     for i in range(0, len(new_field_names)):
@@ -48,7 +46,7 @@ def retrieve_all_data(
 
 def summary_stats(cleaned_list: list):
     """
-    This prints the average, median,max and min values of a list
+    Returns descriptive statistics for cleaned_list
     """
     cleaned_list.sort()
     LQT_ind = int(len(cleaned_list) * 0.25)
@@ -86,7 +84,7 @@ def count_instances(LIST: list):
     if len(d) < 15:
         dictstring = str(d)
     if len(d) >= 15:
-        dictstring = "too big, " + str(len(d)) + " unique values"
+        dictstring = "Too big, " + str(len(d)) + " unique values"
 
     return length_d, dictstring
 
@@ -127,9 +125,8 @@ def Summarise_fields(
     """
     Produces an output csv that reports summary statistics for all fields listed in fields.
     The summary statistics are reported using all entries in that field across all files in
-    files_list. The data in each file is first cleaned using th einformation in filter_dict
-    and df_adjustment_args. Duplicate entries (same values with the same value in the
-    time_stamp column) are deleted.
+    files_list. The data in each file is first cleaned using the information in filter_dict
+    and df_adjustment_args. Duplicate entries (same values at the same time) are deleted.
     """
 
     # Get lists of all entries for each field in new_field_names

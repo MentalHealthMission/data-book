@@ -5,6 +5,9 @@ import pandas as pd
 
 
 def df_adjustment(df, df_adjustment_args):
+    """
+    Adjusts the incoming dataframe df, based on the values in the list df_adjustments_args.
+    """
 
     if df_adjustment_args[0] == "steps":
         _dict_ = df_adjustment_args[1]
