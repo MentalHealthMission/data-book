@@ -22,8 +22,8 @@ that interval. These can be useful either as a direct input to a machine
 learning model trained on the data, or to determine whether or not each interval
 should be classified as `missing data` during subsequent data processing.
 
-In addition to the general template, three other templates are provided for
-specific types of data: {doc}`step count <steps_specific_template>`,
+In addition to the {doc}`general template <general_template>`, three other
+templates are provided for specific types of data: {doc}`step count <steps_specific_template>`,
 {doc}`sleep <sleep_specific_template>`, and
 {doc}`heart rate <heart_rate_specific_template>`. These help to illustrate how the functions
 provided can be applied (and sometimes adjusted) to different data types, and
@@ -41,9 +41,9 @@ Book.
 If you want to publish the Jupyter Book locally, you can use the command `jupyter-book start` and open the book in your local browser. For more information, including on how to generate static *html* pages or *pdfs*, please check their website: https://jupyterbook.org/
 ```
 
-The general template gives details on the data analysis, data cleaning, and
+The {doc}`general template <general_template>` gives details on the data analysis, data cleaning, and
 feature extraction functions used, so should be read first. The data type
 specific templates can then be used as guides to build pipelines for those
 specific types of data. Although specific functions are currently given for only
-three different data types, the general template can be tailored to a wide range of data types,
+three different data types, the {doc}`general template <general_template>` can be tailored to a wide range of data types,
 possibly with some additional specialized analyses needed in some cases.
