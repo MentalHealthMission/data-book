@@ -7,11 +7,13 @@ from all_field_summaries_df_adjustment import df_adjustment
 from helper_funcs import df_filter
 
 
-def retrieve_all_data(new_field_names, files_list, timestamp, filter_dict, df_adjustment_args):
+def retrieve_all_data(
+    new_field_names, files_list, timestamp, filter_dict, df_adjustment_args
+):
     """
     Returns a 2d array that contains all entries in each column listed in 'new_field_names'
     across every file in files_list. Each file is first cleaned using the information in
-    filter_dict and df_adjustment_args. Duplicate entries (same values at the same time) are 
+    filter_dict and df_adjustment_args. Duplicate entries (same values at the same time) are
     deleted.
     """
     all_values = []
@@ -20,14 +22,13 @@ def retrieve_all_data(new_field_names, files_list, timestamp, filter_dict, df_ad
 
     # Loop over all files
     for path in files_list:
-
         try:
             if path[-3:] == "csv":
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(path + " file cannot be read, error: " + str(e))
             continue
 
         df = df_filter(df, filter_dict)

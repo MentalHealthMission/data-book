@@ -186,7 +186,7 @@ def get_timestamp_errors_and_clean(
     # convert to unix time if neccessary
     if convert_to_unix is not None:
         df = convert_to_unix_time(df, convert_to_unix)
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         df = calculate_errors(df, time_stamp_col, measurement_col, STG)
         df = get_group_ids(df, time_stamp_col, STG_fix, STG)
         # Clean the input df of RT+CM and STG
@@ -201,14 +201,14 @@ def get_timestamp_errors_and_clean(
         )
         if "EAS" in included_errors:
             included_errors.remove("EAS")
-    if end_time_col != None:
+    if end_time_col is not None:
         df = calculate_error_with_endtime(
             df, time_stamp_col, measurement_col, end_time_col, STG, EAS_thresh
         )
         df = clean_errors_with_durations(
             df, STG_fix, STG, time_stamp_col, measurement_col, meas_agg, end_time_col
         )
-    if duration_col != None:
+    if duration_col is not None:
         df = calculate_errors_with_duration(
             df, time_stamp_col, measurement_col, duration_col, STG, EAS_thresh
         )
