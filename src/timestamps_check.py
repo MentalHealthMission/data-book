@@ -34,13 +34,14 @@ def check_all_data_types(
     examples = pd.DataFrame()
 
     for path in files_list:
+
         try:
             if path[-3:] == "csv":
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
         except Exception as e:
-            print(path + " file cannot be read, error: " + str(e))
+            print(f"Error occurred while reading {path}: {e}")
             continue
         df = df_filter(df, filter_dict)
         df = df_adjustment(df, df_adjustment_args)
@@ -164,7 +165,7 @@ def STG_errors_and_examples(
     """
     # Count errors and update examples for STG-CM
     indices = df[
-        (df["gap"] > 0) & (df["gap"] < STG_thresh) & (not df["values_different"])
+        (df["gap"] > 0) & (df["gap"] < STG_thresh) & (df["values_different"] == False)
     ].index.tolist()
     total_errors.append(len(indices))
     examples = update_examples(
@@ -206,12 +207,12 @@ def sort_df(
     time_stamp_col and measurement_cols
     """
     # Looks for a column for end time, retrieves end_time_col and sorts df on timestamp/end-time if one is found
-    if end_time_col is not None:
+    if end_time_col != None:
         df = df.sort_values(by=[time_stamp_col, end_time_col])
         df = df.reset_index(drop=True)
     else:
         # Looks for a column for duration, retrieves duration_col and sorts df on timestamp/duration if one is found
-        if duration_col is not None:
+        if duration_col != None:
             df = df.sort_values(by=[time_stamp_col, duration_col])
             df = df.reset_index(drop=True)
         else:
@@ -245,7 +246,7 @@ def count_EAS_errors(
         examples (df.DataFrame): A df containing examples of error types, updated with EAS errorrs
     """
     # calculate EAS errors and examples using end time if it exists
-    if end_time_col is not None:
+    if end_time_col != None:
         indices = df[
             (df[end_time_col].shift() > df[time_stamp_col]) & (df["gap"] > STG)
         ].index.tolist()
@@ -258,7 +259,7 @@ def count_EAS_errors(
         examples = update_examples(df, indices, examples, "overlapping records")
     else:
         # Calculate EAS errors and examples using duration if it exists
-        if duration_col is not None:
+        if duration_col != None:
             df["calc_end_time"] = df[time_stamp_col] + df[duration_col]
             indices = df[
                 (df["calc_end_time"].shift() > df[time_stamp_col]) & (df["gap"] > STG)
@@ -416,9 +417,9 @@ def check_timestamp_errors(
     """
     # Add any duration or end time cols to measurement cols (as we will also want to see if
     # these change when assessing RT and STG)
-    if end_time_col is not None:
+    if end_time_col != None:
         measurement_cols.append(end_time_col)
-    if duration_col is not None:
+    if duration_col != None:
         measurement_cols.append(duration_col)
 
     all_errors, max_fractions = check_all_data_types(

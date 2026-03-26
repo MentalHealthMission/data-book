@@ -8,11 +8,11 @@ def df_adjustment(df, df_adjustment_args):
         df = df.sort_values(by=_dict_["timestamp"]).reset_index(drop=True)
         if _dict_["cumulative"]:
             df["new steps"] = df[_dict_["steps col"]].diff().fillna(0)
-            if _dict_["device col"] is not None:
+            if _dict_["device col"] != None:
                 df["same_device"] = (
                     df[[_dict_["device col"]]] == df[[_dict_["device col"]]].shift()
                 ).any(axis=1)
-                df = df[df["same_device"]]
+                df = df[df["same_device"] == True]
             df[_dict_["steps col"]] = df["new steps"]
         if _dict_["delete zeros"]:
             df = df[df[_dict_["steps col"]] > 0]
