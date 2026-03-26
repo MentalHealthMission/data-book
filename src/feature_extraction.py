@@ -51,7 +51,7 @@ def get_extra_HR_metadata_features(
     cleaned_df["filtered"] = cleaned_df[meas_col].clip(
         lower=low_thresh, upper=upper_thresh
     )
-    cleaned_df["Number filtered"] = (
+    cleaned_df["number filtered"] = (
         cleaned_df["filtered"] != cleaned_df[meas_col]
     ).astype(int)
 
@@ -61,7 +61,7 @@ def get_extra_HR_metadata_features(
     ):  # This is just in case EAS was in included_errors by mistake
         if "EAS" in included_errors:
             included_errors.remove("EAS")
-    included_errors.append("Number filtered")
+    included_errors.append("number filtered")
     cleaned_df["total timestamps with any error"] = cleaned_df[included_errors].max(
         axis=1
     )
@@ -584,16 +584,16 @@ def general_steps_cleaning_and_FE(
         cleaned_df[meas_col],
         cleaned_df["filtered steps"].clip(lower=filter_min),
     )
-    cleaned_df["Number filtered"] = (
+    cleaned_df["number filtered"] = (
         cleaned_df["filtered steps"] != cleaned_df[meas_col]
     ).astype(int)
     # Create a new column in df for total errors
     cleaned_df["total timestamps with any error"] = cleaned_df[
-        included_errors + ["Number filtered"]
+        included_errors + ["number filtered"]
     ].max(axis=1)
     # Extract metadata features from df
     df_errors = cleaned_df.loc[
-        :, included_errors + ["Number filtered", "total timestamps with any error"]
+        :, included_errors + ["number filtered", "total timestamps with any error"]
     ].copy()
     df_errors["total counts"] = 1
     features = df_errors.resample(interval).sum()
