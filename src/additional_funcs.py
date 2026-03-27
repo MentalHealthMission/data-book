@@ -1,5 +1,4 @@
-import datetime
-import time
+import os
 
 import pandas as pd
 
@@ -19,7 +18,7 @@ def investigate_sleep_blocks(
     Returns a list of the length of each 'block' of sleep across all the files in files_list.
     """
     # TODO refactor this.
-    # TODO addd documentation
+    # TODO add documentation
     all_block_durations = []
 
     original_timestamp = timestamp_col
@@ -31,13 +30,13 @@ def investigate_sleep_blocks(
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(path + " file cannot be read, error: " + str(e))
             continue
 
         df = df_filter(df, filter_dict)
         if len(df) > 0:
-            # convert to unix time if neccessary
+            # convert to unix time if necessary
             if convert_to_unix is not None:
                 df = convert_to_unix_time(df, convert_to_unix)
             if end_time_col is not None:
@@ -92,9 +91,11 @@ def investigate_sleep_blocks(
     return all_block_durations
 
 
-def find_time_of_timestamps(all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None):
+def find_time_of_timestamps(
+    all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None
+):
     """
-    Returns a dictionary that reports how often each time of day occurs in the timestamp_col column 
+    Returns a dictionary that reports how often each time of day occurs in the timestamp_col column
     over all the files in all_file_paths
     """
     all_hours = []
@@ -105,8 +106,8 @@ def find_time_of_timestamps(all_file_paths, timestamp_col, convert_to_unix=None,
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(path + " file cannot be read, error: " + str(e))
             continue
         df = df_filter(df, filter_dict)
         # convert to unix time if necessary
@@ -130,7 +131,7 @@ def time_gap_freqs(
     all_file_paths, output_path, time_stamp="value.time", filter_dict=None
 ):
     """
-    Counts time gap frequecies.
+    Counts time gap frequencies.
     """
     all_data = pd.DataFrame()
     for path in all_file_paths:
@@ -140,8 +141,8 @@ def time_gap_freqs(
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(path + " file cannot be read, error: " + str(e))
             continue
 
         df = df_filter(df, filter_dict)
@@ -155,6 +156,10 @@ def time_gap_freqs(
 
     counts_df = all_data.value_counts().reset_index()
     counts_df["fraction"] = counts_df["count"] / len(all_data)
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     counts_df.to_csv(output_path + "time_gaps.csv", index=True)
     df_first15 = counts_df.head(15)
 

@@ -7,7 +7,7 @@ from helper_funcs import convert_to_unix_time, df_filter
 
 def round_timestamp_to_midnight(df, timestamp_col):
     """
-    Rounds all values in timestamp_col to the nearest midnight 
+    Rounds all values in timestamp_col to the nearest midnight
     """
     df["value.time.day"] = pd.to_datetime(df[timestamp_col], unit="s", origin="unix")
     df["hour"] = df["value.time.day"].dt.hour + df["value.time.day"].dt.minute / 60
@@ -51,17 +51,17 @@ def get_extra_HR_metadata_features(
     cleaned_df["filtered"] = cleaned_df[meas_col].clip(
         lower=low_thresh, upper=upper_thresh
     )
-    cleaned_df["Number filtered"] = (
+    cleaned_df["number filtered"] = (
         cleaned_df["filtered"] != cleaned_df[meas_col]
     ).astype(int)
 
     # Create a new column in df for total errors
     if (
-        end_time_col == None and duration_col == None
+        end_time_col is None and duration_col is None
     ):  # This is just in case EAS was in included_errors by mistake
         if "EAS" in included_errors:
             included_errors.remove("EAS")
-    included_errors.append("Number filtered")
+    included_errors.append("number filtered")
     cleaned_df["total timestamps with any error"] = cleaned_df[included_errors].max(
         axis=1
     )
@@ -151,7 +151,6 @@ def get_fixed_series(
     return output_series
 
 
-
 def find_durations(df, start_col, end_col, interval, meas_col=None):
     """
     The incoming df should already be cleaned such that the values in end_col are always after
@@ -199,6 +198,7 @@ def split_intervals(df, freq, start_col, end_col):
 
     return df.reset_index(drop=True)
 
+
 def weighted_average(
     df,
     timestamp_col,
@@ -212,10 +212,10 @@ def weighted_average(
     """
     Returns a df that reports the weighted average of meas_col for the input interval
     """
-    if duration_col != None:
+    if duration_col is not None:
         df["end_time"] = df[timestamp_col] + df[duration_col]
         df = find_durations(df, timestamp_col, "end_time_col", interval)
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         df["start_time_1"] = df[timestamp_col] - (max_time_gap / 2)
         df["start_time_2"] = 0.5 * (
             df[timestamp_col] + df[timestamp_col].shift().fillna(0)
@@ -228,13 +228,13 @@ def weighted_average(
         df["end_time_col"] = df[["end_time_1", "end_time_2"]].min(axis=1)
         df = find_durations(df, "start_time_col", "end_time_col", interval)
         timestamp_col = "start_time_col"  # Change this so the start time column is used in get_fixed_series_below
-    if duration_col == None and end_time_col != None:
+    if duration_col is None and end_time_col is not None:
         df = find_durations(df, timestamp_col, end_time_col, interval)
     duration_col = "seconds_diff"
     df["weighted"] = df[meas_col] * df[duration_col]
     total_duration = get_fixed_series(
         df, interval, "sum", duration_col, timestamp_col, "total_duration"
-    )  # TODO consider also using this as a metdata feature
+    )  # TODO consider also using this as a metadata feature
     total_weighted = get_fixed_series(
         df, interval, "sum", "weighted", timestamp_col, "total_weighted"
     )
@@ -263,10 +263,10 @@ def get_coverage(
     Returns a dataframe that reports the amount of time covered each interval
     """
 
-    if duration_col != None:
+    if duration_col is not None:
         df["end_time"] = df[timestamp_col] + df[duration_col]
         df = find_durations(df, timestamp_col, "end_time_col", interval)
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         df["start_time_1"] = df[timestamp_col] - (max_time_gap / 2)
         df["start_time_2"] = 0.5 * (
             df[timestamp_col] + df[timestamp_col].shift().fillna(0)
@@ -279,12 +279,12 @@ def get_coverage(
         df["end_time_col"] = df[["end_time_1", "end_time_2"]].min(axis=1)
         df = find_durations(df, "start_time_col", "end_time_col", interval)
         timestamp_col = "start_time_col"  # Change this so the start time column is used in get_fixed_series_below
-    if duration_col == None and end_time_col != None:
+    if duration_col is None and end_time_col is not None:
         df = find_durations(df, timestamp_col, end_time_col, interval)
     duration_col = "seconds_diff"
     total_duration = get_fixed_series(
         df, interval, "sum", duration_col, timestamp_col, col_name
-    )  # TODO consider also using this as a metdata feature
+    )  # TODO consider also using this as a metadata feature
 
     return total_duration
 
@@ -304,11 +304,11 @@ def get_sleep_features(
     df = df_filter(df, filter_dict)
 
     if (
-        end_time_col == None
+        end_time_col is None
     ):  # either end col or duration col should not be None for sleep data
         df["end_time"] = df[timestamp_col] + df[duration_col]
         end_time_col = "end_time"
-    if duration_col == None:
+    if duration_col is None:
         df["duration"] = df[end_time_col] - df[timestamp_col]
         duration_col = "duration"
 
@@ -368,7 +368,7 @@ def get_sleep_features(
         lambda x: x.loc[x[duration_col].idxmax()]
     )  # make sure this works properly - need to make sure it always choses same row
 
-    # This should leave just the biggest blck each day, now use fixed series to get sum of awake_duration and awake_count
+    # This should leave just the biggest block each day, now use fixed series to get sum of awake_duration and awake_count
     number_awakenings = get_fixed_series(
         df_max,
         interval,
@@ -471,7 +471,7 @@ def general_steps_cleaning_and_FE(
         start=counts_raw.index.min(), end=counts_raw.index.max(), freq=interval
     )
 
-    if cumulative != True:
+    if not cumulative:
         df = df[df[meas_col] > 0].copy()
         df = df.reset_index(drop=True)
 
@@ -517,7 +517,7 @@ def general_steps_cleaning_and_FE(
             end_time_col=end_time_col,
             duration_col=duration_col,
         )
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         df["previous_time_stamp"] = df[timestamp_col].shift().fillna(0)
         df_clean_pts, features = get_timestamp_errors_and_clean(
             df,
@@ -541,13 +541,13 @@ def general_steps_cleaning_and_FE(
         end_time_col=end_time_col,
         STG_fix=STG_fix,
     )
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         cleaned_df["previous_time_stamp"] = df_clean_pts["previous_time_stamp"]
     if cumulative and (device_col is not None):
         cleaned_df[device_col] = df_clean_device[device_col]
     if round_to_midnight:
         cleaned_df["hour"] = df_hour_cleaned["hour"]
-    if cumulative == True:
+    if cumulative:
         cleaned_df["new steps"] = cleaned_df[meas_col].diff().fillna(0)
         meas_col = "new steps"
         cleaned_df["STG-CM"] = 0
@@ -562,17 +562,17 @@ def general_steps_cleaning_and_FE(
                 cleaned_df[[device_col]] == cleaned_df[[device_col]].shift()
             ).any(axis=1)
             cleaned_df.iloc[0, cleaned_df.columns.get_loc("same_device")] = True
-            cleaned_df = cleaned_df[cleaned_df["same_device"] == True].copy()
+            cleaned_df = cleaned_df[cleaned_df["same_device"]].copy()
         cleaned_df = cleaned_df[cleaned_df[meas_col] > 0].copy()
-    if duration_col != None:  # TODO need to consider if end time=timestamp
+    if duration_col is not None:  # TODO need to consider if end time=timestamp
         cleaned_df["filtered steps"] = cleaned_df[meas_col].clip(
             upper=SPS * cleaned_df[duration_col]
         )
-    if end_time_col != None:  # TODO need to consider if duration==0
+    if end_time_col is not None:  # TODO need to consider if duration==0
         cleaned_df["filtered steps"] = cleaned_df[meas_col].clip(
             upper=SPS * (cleaned_df[end_time_col] - cleaned_df[timestamp_col])
         )
-    if end_time_col == None and duration_col == None:
+    if end_time_col is None and duration_col is None:
         cleaned_df["allowed steps"] = (
             cleaned_df[timestamp_col] - cleaned_df["previous_time_stamp"]
         ) * SPS
@@ -584,16 +584,16 @@ def general_steps_cleaning_and_FE(
         cleaned_df[meas_col],
         cleaned_df["filtered steps"].clip(lower=filter_min),
     )
-    cleaned_df["Number filtered"] = (
+    cleaned_df["number filtered"] = (
         cleaned_df["filtered steps"] != cleaned_df[meas_col]
     ).astype(int)
     # Create a new column in df for total errors
     cleaned_df["total timestamps with any error"] = cleaned_df[
-        included_errors + ["Number filtered"]
+        included_errors + ["number filtered"]
     ].max(axis=1)
     # Extract metadata features from df
     df_errors = cleaned_df.loc[
-        :, included_errors + ["Number filtered", "total timestamps with any error"]
+        :, included_errors + ["number filtered", "total timestamps with any error"]
     ].copy()
     df_errors["total counts"] = 1
     features = df_errors.resample(interval).sum()

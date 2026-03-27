@@ -1,4 +1,3 @@
-import csv
 import datetime
 import os
 import statistics
@@ -17,7 +16,7 @@ def get_file_paths(
 ):
     """
     Get a list of the paths to all the files with name csv_name in input_folder in the subfolders
-    found in site_list. 
+    found in site_list.
     """
     all_paths = []
     if Folder_structure == 1:
@@ -132,7 +131,7 @@ def df_filter(df, filter_dict):
     """
     Filters the rows in df based on values in filter_dict
     """
-    if filter_dict != None:
+    if filter_dict is not None:
         # This option will filter the df, keeping only rows where allowed values
         # are in the specified columns
         df = df[
@@ -148,7 +147,7 @@ def convert_to_unix_time(df: pd.DataFrame, cols: list):
     """
     Converts all columns in cols in the dataframe df to unix time.
     """
-    # TODO : vectorize this.
+    # TODO: vectorize this.
     for col in cols:
         df["converted_time"] = df[col]
         for i in range(0, len(df)):

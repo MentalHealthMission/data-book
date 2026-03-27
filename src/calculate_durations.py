@@ -1,6 +1,4 @@
-import datetime
 import statistics
-import time
 from collections import Counter
 
 import pandas as pd
@@ -37,8 +35,8 @@ def check_all_data_types(
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(path + " file cannot be read, error: " + str(e))
             continue
 
         df = df_filter(df, filter_dict)
@@ -78,11 +76,11 @@ def getting_gaps(
     df = df.copy()
 
     # Add all durations to duration totals if duration or end time is reported
-    if end_time_col != None:
+    if end_time_col is not None:
         # TODO fix warning here
         df["duration"] = df[end_time_col] - df[time_stamp_col]
         duration_totals = duration_totals + df["duration"].tolist()[1:]
-    if duration_col != None:
+    if duration_col is not None:
         duration_totals = duration_totals + df[duration_col].tolist()[1:]
 
     # Add all time gaps to gap_totals

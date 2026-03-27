@@ -1,7 +1,6 @@
 import csv
 import datetime
 import os
-import time
 
 import numpy as np
 import pandas as pd
@@ -27,7 +26,7 @@ def check_all_data_types(
 ):
     """
     Calculates summary statistics for time stamp errors across all files in files_list.
-    Also outputs two additional csvs to 'output_folder' that give more in depth information 
+    Also outputs two additional csvs to 'output_folder' that give more in depth information
     """
     # Create an empty list to record number of errors for each participant for this data type.
     participants = []
@@ -41,8 +40,8 @@ def check_all_data_types(
                 df = pd.read_csv(path)
             if path[-3:] == ".gz":
                 df = pd.read_csv(path, compression="gzip")
-        except:
-            print(path + " file cannot be read")
+        except Exception as e:
+            print(f"Error occurred while reading {path}: {e}")
             continue
         df = df_filter(df, filter_dict)
         df = df_adjustment(df, df_adjustment_args)
@@ -67,7 +66,7 @@ def check_all_data_types(
     # Save output files for this data type
     # TODO find a way to tidy outputs
     write_examples_to_csv(examples, output_folder)
-    write_participants_to_csv(participants,output_folder)
+    write_participants_to_csv(participants, output_folder)
 
     return all_errors, max_fractions
 
@@ -85,7 +84,7 @@ def counting_errors(
     participant_ID_col: str | None,
 ):
     """
-    Counts the number of timestamp errors in the input data frame 'df' 
+    Counts the number of timestamp errors in the input data frame 'df'
     Returns:
         total_errors (list): a list of the total number of timestamps and the total number of each type of error.
         examples (pd.DataFrame): An updated list of examples of pairs of records with a timestamp error.
@@ -203,8 +202,8 @@ def sort_df(
     time_stamp_col: str,
 ):
     """
-    Sorts the input df based on time_stamp_col and then either end_time_col or duration_col if 
-    either of them are not None. Also adds columns for calculating timestamp errors using 
+    Sorts the input df based on time_stamp_col and then either end_time_col or duration_col if
+    either of them are not None. Also adds columns for calculating timestamp errors using
     time_stamp_col and measurement_cols
     """
     # Looks for a column for end time, retrieves end_time_col and sorts df on timestamp/end-time if one is found
@@ -370,15 +369,11 @@ def write_participants_to_csv(participants, output_folder):
         "Fraction unexplained overlapping records (over thresh)",
     ]
     participants.insert(0, column_names)
-    if not os.path.exists(output_folder + "/timestamps errors by participant"):
-        os.makedirs(output_folder + "/timestamps errors by participant")
+    output_timestamp_folder = output_folder + "/timestamps_errors_by_participant"
+    if not os.path.exists(output_timestamp_folder):
+        os.makedirs(output_timestamp_folder)
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    csvname = (
-        output_folder
-        + "/timestamps errors by participant"
-        + "/by_participant_"
-        + current_time
-    )
+    csvname = output_timestamp_folder + "/by_participant_" + current_time
     with open(csvname + ".csv", "w", newline="") as f:
         write = csv.writer(f)
         write.writerows(participants)
@@ -390,10 +385,12 @@ def write_examples_to_csv(examples, output_folder):
     Writes timestamp error examples stored in the dataframe
     'examples' to a csv that will be saved in 'output folder'.
     """
-    if not os.path.exists(output_folder + "/timestamps error examples"):
-        os.makedirs(output_folder + "/timestamps error examples")
+
+    output_timestamp_folder = output_folder + "/timestamps_error_examples"
+    if not os.path.exists(output_timestamp_folder):
+        os.makedirs(output_timestamp_folder)
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    csvname = output_folder + "/timestamps error examples" + "/examples_" + current_time
+    csvname = output_timestamp_folder + "/examples_" + current_time
     examples.to_csv(csvname + ".csv", index=False)
 
     return
