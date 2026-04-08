@@ -31,8 +31,7 @@ def get_file_paths(
                     if f.is_dir()
                 ]
                 if csv_name in subfolders:
-                    all_paths.append(
-                        input_folder
+                    file_name= (input_folder
                         + site
                         + "/"
                         + participant
@@ -40,8 +39,9 @@ def get_file_paths(
                         + csv_name
                         + "/"
                         + csv_name
-                        + ".csv.gz"
-                    )
+                        + ".csv.gz")
+                    if os.path.isfile(file_name):
+                        all_paths.append(file_name)
 
     if Folder_structure == 2:
         for site in site_list:
