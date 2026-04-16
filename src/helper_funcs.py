@@ -5,7 +5,40 @@ import time
 from collections import Counter
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+
+
+def draw_boxplot(df: pd.DataFrame, title: str):
+    """
+    Draws a boxplot of the values in the dataframe with the assigned title.
+    """
+    _, ax = plt.subplots()
+    ax.boxplot(
+        df,
+        showfliers=False,
+        patch_artist=True,
+        boxprops=dict(facecolor="#4C72B0", alpha=0.9),
+        medianprops=dict(color="orange", linewidth=2),
+    )
+    median_value = np.median(df)
+    ax.text(
+        1.1,  # x position (slightly right of box)
+        median_value,  # y position at the median
+        f"Median = {median_value:.3f}",
+        va="center",
+        fontsize=10,
+    )
+
+    ax = plt.gca()
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    plt.gca().set_xticks([])
+
+    plt.grid(True, axis="y", linestyle="--", alpha=0.6)
+    plt.title(title)
+    plt.show()
 
 
 def get_file_paths(
