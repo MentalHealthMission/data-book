@@ -34,7 +34,6 @@ def check_all_data_types(
     examples = pd.DataFrame()
 
     for path in files_list:
-
         try:
             if path[-3:] == "csv":
                 df = pd.read_csv(path)
