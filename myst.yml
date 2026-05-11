@@ -1,0 +1,24 @@
+version: 1
+project:
+  title: Data Book
+  index: content/general_intro.md
+  authors:
+    - name: NIHR Mental Health TRC - Data and Digital
+  github: https://github.com/MentalHealthMission/data-book
+  bibliography:
+    # - references.bib
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      output: exports/book.pdf
+  toc:
+    - file: content/general_intro.md
+    - file: content/general_template.ipynb
+    - file: content/heart_rate_specific_template.ipynb
+    - file: content/sleep_specific_template.ipynb
+    - file: content/steps_specific_template.ipynb
+site:
+  options:
+    logo: images/MH-TRC-logo.png
+    folders: true
+  template: book-theme
