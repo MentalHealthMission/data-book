@@ -2,7 +2,7 @@
 
 ![phone](/images/undraw_phone_no_bg.png)
 
-Please contact camilla.mapstone@manchester.ac.uk for any questions regarding this repository
+Please contact camilla.mapstone@manchester.ac.uk for any questions regarding this repository.
 
 This book provides a pipeline for data analysis, data cleaning, and
 feature extraction that can be applied to a range of smartphone and wearable
