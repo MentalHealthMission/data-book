@@ -1,9 +1,8 @@
 ![phone](images/undraw_phone_no_bg.png)
 
-This book provides a pipeline for data analysis, data cleaning, and
+This repository provides a pipeline for data analysis, data cleaning, and
 feature extraction that can be applied to a range of smartphone and wearable
-datasets. It is built from a [GitHub repository](https://github.com/MentalHealthMission/data-book), which contains all the code
-for this pipeline and is designed to be converted into a Jupyter Book once the
+datasets and is designed to be converted into a Jupyter Book once the
 pipeline is complete, with each Jupyter notebook becoming a `chapter` of the
 book that records the data analysis results, code used, and decisions made for
 one specific type of data.
