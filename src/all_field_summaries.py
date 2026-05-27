@@ -1,6 +1,7 @@
 import math
 import statistics
 
+from attrs import fields
 import pandas as pd
 
 from all_field_summaries_df_adjustment import df_adjustment
@@ -33,6 +34,14 @@ def retrieve_all_data(
 
         df = df_filter(df, filter_dict)
         df = df_adjustment(df, df_adjustment_args)
+
+        # Check that all fields in new_field_names and timestamp are present in the dataframe
+        for field in new_field_names:
+            if field not in df.columns:
+                raise ValueError(f"Column '{field}' not found in dataframe")
+        if timestamp not in df.columns:
+                raise ValueError(f"Column '{timestamp}' not found in dataframe")
+
         for j in range(0, len(new_field_names)):
             if new_field_names[j] != timestamp:
                 df_copy = df[[timestamp, new_field_names[j]]].copy()

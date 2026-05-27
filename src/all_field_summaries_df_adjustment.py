@@ -8,6 +8,10 @@ def df_adjustment(df, df_adjustment_args):
 
     if df_adjustment_args[0] == "steps":
         _dict_ = df_adjustment_args[1]
+        if _dict_["steps col"] not in df.columns:
+            raise ValueError(f"Column '{_dict_['steps col']}' not found in dataframe")
+        if _dict_["timestamp"] not in df.columns:
+            raise ValueError(f"Column '{_dict_['timestamp']}' not found in dataframe")
         df = df.sort_values(by=_dict_["timestamp"]).reset_index(drop=True)
         if _dict_["cumulative"]:
             df["new steps"] = df[_dict_["steps col"]].diff().fillna(0)
