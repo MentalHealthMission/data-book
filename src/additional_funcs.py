@@ -92,7 +92,7 @@ def investigate_sleep_blocks(
 
 
 def find_time_of_timestamps(
-    all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None
+    all_file_paths, timestamp_col, convert_to_unix=None, filter_dict=None, time_zone="Europe/London"
 ):
     """
     Returns a dictionary that reports how often each time of day occurs in the timestamp_col column
@@ -114,9 +114,7 @@ def find_time_of_timestamps(
         if convert_to_unix is not None:
             df = convert_to_unix_time(df, convert_to_unix)
         # Add hour of timestamp to list 'all_hours'
-        df["value.time.day"] = pd.to_datetime(
-            df[timestamp_col], unit="s", origin="unix"
-        )
+        df["value.time.day"] =pd.to_datetime(df[timestamp_col], unit="s", utc=True).dt.tz_convert(time_zone).dt.tz_localize(None)
         df["hour"] = df["value.time.day"].dt.strftime("%H:%M:%S")
         all_hours = all_hours + list(df["hour"])
 
