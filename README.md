@@ -9,7 +9,7 @@ one specific type of data.
 
 The repository includes a [general template](content/general_template.ipynb) which gives a step-by-step
 method for processing the raw data, ranging from data analysis to feature
-extraction. The data analysis includes three main steps that are helpful for all
+extraction. The initial data analysis includes three main steps that are helpful for all
 data types, as well as additional steps that will be useful for certain types of
 data. The cleaning and feature extraction stage includes a function to create
 `minutely`, `hourly` or `daily` features from the raw data and also to save a
@@ -17,7 +17,7 @@ cleaned version of the raw data. For all data types, the features produced
 include `metadata features` that describe the quality/quantity of the data for
 that interval. These can be useful either as a direct input to a machine
 learning model trained on the data, or to determine whether or not each interval
-should be classified as `missing data` during subsequent data processing.
+should be classified as `missing data` during subsequent data processing. The final section of the template analyses the metadata features produced to investigate the data completeness and quality.
 
 In addition to the [general template](content/general_template.ipynb), three other
 templates are provided for specific types of data: [step count](content/steps_specific_template.ipynb),
